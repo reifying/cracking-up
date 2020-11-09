@@ -1,4 +1,4 @@
-== Clojure Solutions to Cracking the Coding Interview
+## Clojure Solutions to Cracking the Coding Interview
 
 Run tests
 ```
