@@ -4,4 +4,6 @@
 
 (deftest string-compression
   (is (= "a2b1c5a3" (compressed "aabcccccaaa")))
-  (is (= "aBc" (compressed "aBc"))))
+  (is (= "aBc" (compressed "aBc")))
+  (is (= "a" (compressed "a")))
+  (is (= "" (compressed ""))))
