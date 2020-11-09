@@ -3,4 +3,9 @@
 (defn pal-perm?
   "Is the string possibly a palindrome based on letter counts alone?"
   [s]
-  true)
+  (->> s
+       frequencies
+       (map val)
+       (filter odd?)
+       count
+       (>= 1)))
