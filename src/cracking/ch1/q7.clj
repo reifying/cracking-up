@@ -1,36 +1,35 @@
 (ns cracking.ch1.q7)
 
-(require '[clojure.pprint :refer [pprint]])
-
-(defn- new-coords [n x y]
+(defn- new-coords 
+  "Coordinates that x, y should map to for a 90 degree rotation"
+  [n x y]
   [y (dec (- n x))])
 
-(defn printm [m]
-  (doall (map pprint m))
-  (println))
+(defn- quad-coords
+  "Return the coordinates of one quadrant. Since an odd-length square matrix
+   cannot be cleanly divided into four quadrants, include middle column as well"
+  [n]
+  (for [x (range (Math/round  (double (/ n 2))))
+        y (range (quot n 2))]
+    [x y]))
 
-
-(defn all-coords [n]
-  (for [x (range n) y (range n)] [x y]))
-
-(defn- replace [matrix n visited x y v]
-  (let [[x2 y2]  (new-coords n x y)
-        next-val (aget matrix x2 y2)]
-    (aset matrix x2 y2 v)
-    (printm matrix)
-    (if (visited [x2 y2])
-      visited
-      (recur matrix n (conj visited [x2 y2]) x2 y2 next-val))))
-
+(defn- rotate! 
+  "Starting at a given coordinate, rotate each pixel inline and stop upon
+   return to the original coordinates"
+  [matrix n [x1 y1]]
+  (loop [x x1 y y1 v (aget matrix x y)]
+    (let [[x2 y2]  (new-coords n x y)
+          next-val (aget matrix x2 y2)]
+      (aset matrix x2 y2 v)
+      (if-not (and (= x1 x2) (= y1 y2))
+        (recur x2 y2 next-val)))))
 
 (defn rotate-90
   "Rotate N x N matrix 90 degrees in place"
   [matrix]
   (let [n (count (first matrix))]
-    (loop [xs (all-coords n)
-           visited #{}]
-      (cond (not (seq xs)) matrix
-            (visited (first xs)) (recur (rest xs) visited)
-            :default (let [[x y] (first xs)
-                           v (aget matrix x y)]
-                       (recur (rest xs) (replace matrix n visited x y v)))))))
+    (loop [xs (quad-coords n)]
+      (when (seq xs)
+        (rotate! matrix n (first xs))
+        (recur (rest xs)))))
+  matrix)
