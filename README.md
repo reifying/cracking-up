@@ -9,3 +9,8 @@ level abstractions.
 ```
 clj -A:test
 ```
+
+# Generate stubs for next question
+```
+clj -m gen-stub 2 1    # chapter 2 question 1
+```
