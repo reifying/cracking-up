@@ -7,3 +7,6 @@
         (recur visited (rest xs) nodups)
         (recur (conj visited (first xs)) (rest xs) (cons (first xs) nodups)))
       (reverse nodups))))
+
+(defn dedupe-list-bufferless [xs]
+  xs)
